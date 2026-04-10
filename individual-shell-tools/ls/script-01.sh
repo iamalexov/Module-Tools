@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash.  
 
 set -euo pipefail
 
@@ -13,3 +13,4 @@ fi
 
 # TODO: Write a command to list the files and folders in this directory.
 # The output should be a list of names including child-directory, script-01.sh, script-02.sh, and more.
+ls
