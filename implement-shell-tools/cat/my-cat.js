@@ -12,12 +12,30 @@ program
 program.parse();
 
 const options = program.opts();
-console.log('Options: ', options);
 
 const files = program.args;
-console.log('Files: ', files);
+
+
+
+let lineNumber = 1;
 
 for (const file of files) {
   const content = await fs.readFile(file, "utf-8");
-  console.log(content);
+  const lines = content.split("\n");
+
+  for (const line of lines) {
+    if (options.numberNonblank) {
+      if (line.trim() !== "") {
+        console.log(`${lineNumber}\t${line}`);
+        lineNumber++;
+      } else {
+        console.log(line);
+      }
+    } else if (options.number) {
+      console.log(`${lineNumber}\t${line}`);
+      lineNumber++;
+    } else {
+      console.log(line);
+    }
+  }
 }
