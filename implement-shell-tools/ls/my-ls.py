@@ -11,5 +11,7 @@ except:
     print(f"ls: cannot access '{path}'")
     exit(1)
 
+files.sort()
+
 for file in files:
     print(file)
