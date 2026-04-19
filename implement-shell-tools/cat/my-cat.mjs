@@ -18,10 +18,37 @@ We recommend you start off supporting no flags, then add support for `-n`, then 
 
  */
 import fs from "fs";
+import { program } from "commander";
 
-const args = process.argv.slice(2);
+program
+  .option("-n")
+  .option("-b")
+  .argument("<files...>");
 
-for (const file of args) {
+program.parse();
+
+const options = program.opts();
+const files = program.args;
+
+let lineNumber = 1;
+
+for (const file of files) {
   const content = fs.readFileSync(file, "utf-8");
-  console.log(content);
+  const lines = content.split("\n");
+
+  for (const line of lines) {
+    if (options.b) {
+      if (line !== "") {
+        console.log(lineNumber + " " + line);
+        lineNumber++;
+      } else {
+        console.log("");
+      }
+    } else if (options.n) {
+      console.log(lineNumber + " " + line);
+      lineNumber++;
+    } else {
+      console.log(line);
+    }
+  }
 }
