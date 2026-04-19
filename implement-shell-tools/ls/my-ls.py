@@ -3,7 +3,10 @@ import os
 
 args = sys.argv[1:]
 
-path = args[0] if args else "."
+flag_a = "-a" in args
+
+paths = [arg for arg in args if arg != "-a"]
+path = paths[0] if paths else "."
 
 try:
     files = os.listdir(path)
@@ -12,6 +15,12 @@ except:
     exit(1)
 
 files.sort()
+
+if not flag_a:
+    files = [f for f in files if not f.startswith(".")]
+
+if flag_a:
+    files = [".", ".."] + files
 
 for file in files:
     print(file)
