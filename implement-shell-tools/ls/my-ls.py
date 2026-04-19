@@ -4,8 +4,9 @@ import os
 args = sys.argv[1:]
 
 flag_a = "-a" in args
+flag_one = "-1" in args
 
-paths = [arg for arg in args if arg != "-a"]
+paths = [arg for arg in args if arg not in ["-a", "-1"]]
 path = paths[0] if paths else "."
 
 try:
