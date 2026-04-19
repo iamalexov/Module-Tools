@@ -1,28 +1,28 @@
 import sys
+import argparse
 
-args = sys.argv[1:]
 
-flag_n = "-n" in args
-flag_b = "-b" in args
+parser = argparse.ArgumentParser(
+    prog="cat",
+    description="Concatenate files and print on the standard output"
+)
 
-files = [arg for arg in args if arg not in ["-n", "-b"]]
+parser.add_argument("files", nargs="*", help="Files to read")
+parser.add_argument("-n", action="store_true", help="Number all output lines")
+parser.add_argument("-b", action="store_true", help="Number non-blank lines")
 
-line_number = 1
+args = parser.parse_args()
 
-for file in files:
-    try:
-        with open(file, "r") as f:
-            for line in f:
-                if flag_b:
-                    if line.strip() != "":
-                        print(f"{line_number:6}  {line}", end="")
-                        line_number += 1
-                    else:
-                        print(line, end="")
-                elif flag_n:
-                    print(f"{line_number:6}  {line}", end="")
-                    line_number += 1
-                else:
-                    print(line, end="")
-    except FileNotFoundError:
-        print(f"cat: {file}: No such file or directory", file=sys.stderr)
+def main():
+    line_number = 1
+
+    if not args.files:
+        print_stdin()
+        return
+
+    for file in args.files:
+        line_number = print_file(file, line_number)
+
+
+if __name__ == "__main__":
+    main()
