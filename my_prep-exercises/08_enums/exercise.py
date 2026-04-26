@@ -1,8 +1,6 @@
 import sys
 from dataclasses import dataclass
 from enum import Enum
-from typing import List
-from collections import Counter
 
 
 class OperatingSystem(Enum):
@@ -11,14 +9,14 @@ class OperatingSystem(Enum):
     UBUNTU = "Ubuntu"
 
 
-@dataclass(frozen=True)
+@dataclass
 class Person:
     name: str
     age: int
     preferred_operating_system: OperatingSystem
 
 
-@dataclass(frozen=True)
+@dataclass
 class Laptop:
     id: int
     manufacturer: str
@@ -35,37 +33,48 @@ laptops = [
 ]
 
 
-# 🔹 INPUT
-name = input("Input name: ")
+name = input("Name: ")
 
+age_input = input("Age: ")
 try:
-    age = int(input("Input age: "))
+    age = int(age_input)
 except ValueError:
-    print("Invalid age", file=sys.stderr)
+    print("Wrong age")
     sys.exit(1)
 
+
+os_input = input("OS (Ubuntu / Arch Linux / macOS): ")
 try:
-    preferred_os = OperatingSystem(input("Input operating system: "))
+    preferred_os = OperatingSystem(os_input)
 except ValueError:
-    print("Invalid operating system", file=sys.stderr)
+    print("Wrong OS")
     sys.exit(1)
 
 
 person = Person(name, age, preferred_os)
 
 
-# 🔹 считаем ноутбуки
 count = 0
 for laptop in laptops:
-    if person.preferred_operating_system == laptop.operating_system:
+    if laptop.operating_system == person.preferred_operating_system:
         count += 1
 
-print(f"Available {count} laptops with {person.preferred_operating_system.value}")
+print("Laptops available:", count)
 
 
-# 🔹 совет
-counts = Counter(l.operating_system for l in laptops)
-best_os, best_count = counts.most_common(1)[0]
+max_count = 0
+best_os = None
 
-if best_os != person.preferred_operating_system:
-    print(f"If you accept {best_os.value}, more laptops available: {best_count}")
+for laptop in laptops:
+    c = 0
+    for l in laptops:
+        if l.operating_system == laptop.operating_system:
+            c += 1
+
+    if c > max_count:
+        max_count = c
+        best_os = laptop.operating_system
+
+
+if best_os is not None and best_os != person.preferred_operating_system:
+    print("Better choose:", best_os.value)
